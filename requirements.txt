@@ -1,0 +1,10 @@
+autoenv==1.0.0
+beautifulsoup4==4.5.1
+Flask==0.11.1
+Flask-Login==0.4.0
+flask-mongoengine==0.8
+Flask-WTF==0.13.1
+mongoengine==0.10.6
+requests==2.11.1
+WTForms==2.1
+validators==0.11.0

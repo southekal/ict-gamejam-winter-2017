@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="{% block meta_description %}{% endblock %}">
+        <meta name="keyword" content="{% block meta_keyword %}{% endblock %}">
+
+        <title>{% block title %}{% endblock %} - Spotlight Flight</title>
+
+        <!--<script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>-->
+        <script src="{{ url_for('static', filename='js/phaser.min.js') }}"></script>
+
+        <style type="text/css">
+            body {
+                margin: 0;
+            }
+        </style>
+
+    {% endblock %}
+
+  </head>
+
+  <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{category}}" role="alert">
+                    <h1 class="lead">{{ message | safe}}</h1>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block body %}
+    {% endblock %}
+
+    {% block javascripts %}
+    {% endblock %}
+
+  </body>
+</html>
