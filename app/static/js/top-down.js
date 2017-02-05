@@ -18,6 +18,8 @@ function preload() {
     game.load.image('nav', "static/img/intro/nav.png");
     game.load.image('mexicoBorder', "static/img/intro/border.png");
     game.load.image('usBorder', "static/img/intro/border.png");
+    game.load.image('trumpwin', 'static/img/intro/trump_win.png');
+    game.load.image('enriquewin', 'static/img/intro/enrique_win.png');
 }
 
 var player;
@@ -104,6 +106,17 @@ function create() {
     // game.add.text(game.world.width - 100, 10, 'Lives : ', { font: '34px Arial', fill: '#fff' });
 
 
+    // Trump Win
+    trumpWin = game.add.sprite(game.world.centerX, game.world.centerY, 'trumpwin');
+    trumpWin.anchor.setTo(0.5, 0.5);
+    trumpWin.visible = false;
+    game.time.events.add(Phaser.Timer.SECOND * 90, fadePicture, this);
+
+    // Enrique Win
+    enriqueWin = game.add.sprite(game.world.centerX, game.world.centerY, 'enriquewin');
+    enriqueWin.anchor.setTo(0.5, 0.5);
+    enriqueWin.visible = false;
+
     // Taco Counter
     tacoCounter = game.add.group();
     scoreTacoString = 'Tacos : ';
@@ -112,11 +125,11 @@ function create() {
     // Donald Brick Counter
     wallCounter = game.add.group();
     scoreWallString = 'Bricks : ';
-    scoreWallText = game.add.text(10, 10, scoreWallString + scoreWall, { font: '34px Arial', fill: '#fff' });
+    scoreWallText = game.add.text(300, 10, scoreWallString + scoreWall, { font: '34px Arial', fill: '#fff' });
 
 
     //  Text to display win/lose
-    stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
+    stateText = game.add.text(game.world.centerX,game.world.centerY + 80,' ', { font: '30px Arial', fill: '#000' });
     stateText.anchor.setTo(0.5, 0.5);
     stateText.visible = false;
 
@@ -256,8 +269,18 @@ function render() {
     // {
     //     game.debug.body(aliens.children[i]);
     // }
+    game.debug.text("Time until event: " + game.time.events.duration, 32, 32);
 
 }
+
+function fadePicture() {
+    stateText.text = "You Won!! \n Click to restart";
+    stateText.visible = true;
+    trumpWin.visible = true;
+    game.input.onTap.addOnce(restart,this);
+    // game.add.tween(trumpWin).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
+}
+
 
 function createBricks () {
     //  The baddies!
@@ -323,13 +346,13 @@ function collisionHandler (bullet, brick) {
     if (bricks.countLiving() == 0)
     {
 
-        stateText.text = "Enrique! You Won, \n Click to restart";
+        stateText.text = "You Won!! \n Click to restart";
         stateText.visible = true;
+        enriqueWin.visible = true;
 
         //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
     }
-
 }
 
 function collisionWallHandler (bullet, wall_brick) {
@@ -419,15 +442,15 @@ function collisionBrickHandler (brick_bullet, brick) {
     explosion.reset(brick.body.x, brick.body.y);
     explosion.play('kaboom', 30, false, true);
 
-    if (bricks.countLiving() == 0)
-    {
+    // if (bricks.countLiving() == 0)
+    // {
 
-        stateText.text = "Donald! You Won, \n Click to restart";
-        stateText.visible = true;
+    //     stateText.text = "Donald! You Won, \n Click to restart";
+    //     stateText.visible = true;
 
-        //the "click to restart" handler
-        game.input.onTap.addOnce(restart,this);
-    }
+    //     //the "click to restart" handler
+    //     game.input.onTap.addOnce(restart,this);
+    // }
 }
 
 
@@ -568,6 +591,7 @@ function setupTacos() {
     tacos.setAll('checkWorldBounds', true);
     
     var taco = tacos.create(getRandomInt(0, 700), getRandomInt(400, 500), 'taco');
+    var taco1 = tacos.create(getRandomInt(0, 700), getRandomInt(400, 500), 'taco')
 
     // for (var i = 0; i < 12; i++)
     // {
