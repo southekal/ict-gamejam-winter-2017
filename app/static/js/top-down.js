@@ -20,6 +20,17 @@ function preload() {
     game.load.image('usBorder', "static/img/intro/border.png");
     game.load.image('trumpwin', 'static/img/intro/trump_win.png');
     game.load.image('enriquewin', 'static/img/intro/enrique_win.png');
+
+    game.load.audio('bgsound', ['static/audio/Background.mp3'])
+    game.load.audio('run', ['static/audio/Run.mp3'])
+    game.load.audio('pickuptaco', ['static/audio/PickupTaco.mp3'])
+    game.load.audio('pickupbrick', ['static/audio/PickupBrick.mp3'])
+    game.load.audio('throwtaco', ['static/audio/tacothrow.mp3'])
+    game.load.audio('throwbrick', ['static/audio/brickthrow.mp3'])
+    game.load.audio('destroybrick', ['static/audio/destroyedbrick1.mp3'])
+    game.load.audio('placebrick', ['static/audio/placebrick.mp3'])
+    game.load.audio('trumpwinsound', ['static/audio/trumpwin.mp3'])
+    game.load.audio('enriquewinsound', ['static/audio/enriquewin.mp3'])
 }
 
 var player;
@@ -100,6 +111,9 @@ function create() {
     // Setup initial single bricks showing up randomly
     setupDonaldBricks();
 
+    // play background music
+    bgmusic = game.add.audio('bgsound');
+    bgmusic.play();
    
     // //  Lives
     // lives = game.add.group();
@@ -176,14 +190,17 @@ function update() {
     // *********************************************************************************************************
     // PLAYER 1 SETTINGS
     //  Reset the player, then check for movement keys
+    var snd = game.add.audio('run');
     player.body.velocity.setTo(0, 0);
-
+    
     if (cursors.left.isDown){
         player.body.velocity.x = -300;
         player.animations.play('left');
+        // snd.play();
     } else if (cursors.right.isDown){
         player.body.velocity.x = 300;
         player.animations.play('right');
+        // snd.play();
     } else{
         //  Stand still
         player.animations.stop();
@@ -193,9 +210,11 @@ function update() {
     if (cursors.up.isDown){
         player.body.velocity.y = -300;
         player.animations.play('up');
+        // snd.play();
     } else if (cursors.down.isDown){
         player.body.velocity.y = 300;
         player.animations.play('down');
+        // snd.play();
     }
 
     //  Firing
@@ -219,9 +238,11 @@ function update() {
     if (a.isDown){
         donald.body.velocity.x = -300;
         donald.animations.play('dleft');
+        // snd.play();
     } else if (d.isDown){
         donald.body.velocity.x = 300;
         donald.animations.play('dright');
+        // snd.play();
     } else{
         //  Stand still
         donald.animations.stop();
@@ -231,9 +252,11 @@ function update() {
     if (w.isDown){
         donald.body.velocity.y = -300;
         donald.animations.play('dup');
+        // snd.play();
     } else if (s.isDown){
         donald.body.velocity.y = 300;
         donald.animations.play('ddown');
+        // snd.play();
     }
 
     if (fireBrick.isDown){
@@ -277,6 +300,10 @@ function fadePicture() {
     stateText.text = "You Won!! \n Click to restart";
     stateText.visible = true;
     trumpWin.visible = true;
+    var snd = game.add.audio('trumpwinsound');
+    bgmusic.destroy()
+    snd.play();
+    game.time.event.removeAll()
     game.input.onTap.addOnce(restart,this);
     // game.add.tween(trumpWin).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
 }
@@ -342,6 +369,8 @@ function collisionHandler (bullet, brick) {
     var explosion = explosions.getFirstExists(false);
     explosion.reset(brick.body.x, brick.body.y);
     explosion.play('kaboom', 30, false, true);
+    var snd = game.add.audio('destroybrick');
+    snd.play();
 
     if (bricks.countLiving() == 0)
     {
@@ -349,6 +378,10 @@ function collisionHandler (bullet, brick) {
         stateText.text = "You Won!! \n Click to restart";
         stateText.visible = true;
         enriqueWin.visible = true;
+        var snd = game.add.audio('enriquewinsound');
+        game.time.removeAll()
+        bgmusic.destroy();
+        snd.play();
 
         //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
@@ -365,6 +398,8 @@ function collisionWallHandler (bullet, wall_brick) {
     var explosion = explosions.getFirstExists(false);
     explosion.reset(wall_brick.body.x, wall_brick.body.y);
     explosion.play('kaboom', 30, false, true);
+    var snd = game.add.audio('placebrick');
+    snd.play();
 
     // if (wall_bricks.countLiving() == 0)
     // {
@@ -441,6 +476,8 @@ function collisionBrickHandler (brick_bullet, brick) {
     var explosion = explosions.getFirstExists(false);
     explosion.reset(brick.body.x, brick.body.y);
     explosion.play('kaboom', 30, false, true);
+    var snd = game.add.audio('placebrick');
+    snd.play();
 
     // if (bricks.countLiving() == 0)
     // {
@@ -459,6 +496,8 @@ function fireBullet (scoreTaco) {
     if (scoreTaco > 0 && game.time.now > bulletTime) {
         bullet = bullets.getFirstExists(false);
         if (bullet) {
+            var snd = game.add.audio('throwtaco');
+            snd.play();
             bullet.animations.play("spin");
             decreaseTacoCounter(scoreTaco);
             //  And fire it
@@ -481,6 +520,8 @@ function fireBrickBullet (scoreWall) {
     if (scoreWall > 0 && game.time.now > bulletTime) {
         brick_bullet = brick_bullets.getFirstExists(false);
         if (brick_bullet) {
+            var snd = game.add.audio('throwbrick');
+            snd.play();
             // brick_bullet.animations.play("fin");
             decreaseBrickCounter(scoreWall);
             //  And fire it
@@ -666,6 +707,9 @@ function collectTacos (player, taco) {
     taco.kill();    
     updateTacoCounter();
     var taco = tacos.create(getRandomInt(0, 700), getRandomInt(400, 500), 'taco');
+
+    var snd = game.add.audio('pickuptaco');
+    snd.play();
 }
 
 function collectBricks (donald, dbrick) {
@@ -673,6 +717,8 @@ function collectBricks (donald, dbrick) {
     dbrick.kill();    
     updateBrickCounter();
     var dbrick = dbricks.create(getRandomInt(0, 700), getRandomInt(100, 200), 'singlebrick');
+    var snd = game.add.audio('pickupbrick');
+    snd.play();
 }
 
 function updateTacoCounter() {
