@@ -9,8 +9,9 @@
 		text-align:center;
 		background-attachment: relative;
 		background-position: center center;
-		min-height: 750px;
-		width: 100%;
+		width: 800px;
+		height: 600px;
+		/*width: 100%;*/
 		
 	    -webkit-background-size: 100%;
 	    -moz-background-size: 100%;
@@ -25,8 +26,17 @@
 </style>
 
 	<div id="h">
-		<div style="padding-top:600px;">
+		<div>
 			<div class="row">
+				<img src="{{ url_for('static', filename='img/home.png') }}" class="pull-left" style="padding-left:20px; margin-bottom:100px;">
+			</div>
+			<div class="row">
+				<img src="{{ url_for('static', filename='img/about.png') }}" class="pull-left" style="padding-left:20px;">
+			</div>
+			<div class="row">
+				<img src="{{ url_for('static', filename='img/manifesto.png') }}" class="pull-left" style="padding-left:20px;">
+			</div>
+			<div class="row" style="padding-top:420px;">
 				<a href="/game"><img src="{{ url_for('static', filename='img/intro/playgame.png') }}"></a>
 			</div>
 			<div class="row" style="padding-top:10px;">

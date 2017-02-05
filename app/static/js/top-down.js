@@ -21,16 +21,16 @@ function preload() {
     game.load.image('trumpwin', 'static/img/intro/trump_win.png');
     game.load.image('enriquewin', 'static/img/intro/enrique_win.png');
 
-    game.load.audio('bgsound', ['static/audio/Background.mp3'])
-    game.load.audio('run', ['static/audio/Run.mp3'])
-    game.load.audio('pickuptaco', ['static/audio/PickupTaco.mp3'])
-    game.load.audio('pickupbrick', ['static/audio/PickupBrick.mp3'])
-    game.load.audio('throwtaco', ['static/audio/tacothrow.mp3'])
-    game.load.audio('throwbrick', ['static/audio/brickthrow.mp3'])
-    game.load.audio('destroybrick', ['static/audio/destroyedbrick1.mp3'])
-    game.load.audio('placebrick', ['static/audio/placebrick.mp3'])
-    game.load.audio('trumpwinsound', ['static/audio/trumpwin.mp3'])
-    game.load.audio('enriquewinsound', ['static/audio/enriquewin.mp3'])
+    game.load.audio('bgsound', ['static/audio/Background.mp3', 'static/audio/Background.ogg'])
+    game.load.audio('run', ['static/audio/Run.mp3', 'static/audio/Run.ogg'])
+    game.load.audio('pickuptaco', ['static/audio/PickupTaco.mp3', 'static/audio/PickupTaco.ogg'])
+    game.load.audio('pickupbrick', ['static/audio/PickupBrick.mp3', 'static/audio/PickupBrick.ogg'])
+    game.load.audio('throwtaco', ['static/audio/tacothrow.mp3', 'static/audio/tacothrow.ogg'])
+    game.load.audio('throwbrick', ['static/audio/brickthrow.mp3', 'static/audio/brickthrow.ogg'])
+    game.load.audio('destroybrick', ['static/audio/destroyedbrick1.mp3', 'static/audio/destroyedbrick1.ogg'])
+    game.load.audio('placebrick', ['static/audio/placebrick.mp3', 'static/audio/placebrick.ogg'])
+    game.load.audio('trumpwinsound', ['static/audio/trumpwin.mp3', 'static/audio/trumpwin.ogg'])
+    game.load.audio('enriquewinsound', ['static/audio/enriquewin.mp3', 'static/audio/enriquewin.ogg'])
 }
 
 var player;
@@ -124,7 +124,7 @@ function create() {
     trumpWin = game.add.sprite(game.world.centerX, game.world.centerY, 'trumpwin');
     trumpWin.anchor.setTo(0.5, 0.5);
     trumpWin.visible = false;
-    game.time.events.add(Phaser.Timer.SECOND * 90, fadePicture, this);
+    game.time.events.add(Phaser.Timer.SECOND * 45, fadePicture, this);
 
     // Enrique Win
     enriqueWin = game.add.sprite(game.world.centerX, game.world.centerY, 'enriquewin');
@@ -158,7 +158,7 @@ function create() {
     brickadds.forEach(setupBricker, this);
 
     // Make screen go full size
-    //game.input.onDown.add(goFullscreen, this);
+    // game.input.onDown.add(goFullscreen, this);
 
     //  And some controls to play the game with
     cursors = game.input.keyboard.createCursorKeys();
@@ -303,7 +303,7 @@ function fadePicture() {
     var snd = game.add.audio('trumpwinsound');
     bgmusic.destroy()
     snd.play();
-    game.time.event.removeAll()
+    game.time.events.removeAll()
     game.input.onTap.addOnce(restart,this);
     // game.add.tween(trumpWin).to( { alpha: 0 }, 2000, Phaser.Easing.Linear.None, true);
 }
@@ -379,7 +379,7 @@ function collisionHandler (bullet, brick) {
         stateText.visible = true;
         enriqueWin.visible = true;
         var snd = game.add.audio('enriquewinsound');
-        game.time.removeAll()
+        game.time.events.removeAll()
         bgmusic.destroy();
         snd.play();
 
