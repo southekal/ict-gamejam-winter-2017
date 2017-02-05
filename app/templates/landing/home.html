@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block meta_description %}Sheriff Labs{% endblock %}
+{% block title %}Sheriff Labs{% endblock %}
+{% block body %}
+	
+<style>
+	#h {
+		background-image: url(static/img/intro/opening_screen.png); no-repeat center top;
+		text-align:center;
+		background-attachment: relative;
+		background-position: center center;
+		min-height: 750px;
+		width: 100%;
+		
+	    -webkit-background-size: 100%;
+	    -moz-background-size: 100%;
+	    -o-background-size: 100%;
+	    background-size: 100%;
+
+	    -webkit-background-size: cover;
+	    -moz-background-size: cover;
+	    -o-background-size: cover;
+	    background-size: cover;
+    }
+</style>
+
+	<div id="h">
+		<div style="padding-top:600px;">
+			<div class="row">
+				<a href="/game"><img src="{{ url_for('static', filename='img/intro/playgame.png') }}"></a>
+			</div>
+			<div class="row" style="padding-top:10px;">
+				<img src="{{ url_for('static', filename='img/intro/control.png') }}">
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

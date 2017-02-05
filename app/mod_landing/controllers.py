@@ -7,7 +7,12 @@ mod_landing = Blueprint('landing', __name__, url_prefix='')
 
 @mod_landing.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template("index.html")
+    return render_template("landing/home.html")
+
+
+@mod_landing.route('/game', methods=['GET', 'POST'])
+def game():
+    return render_template("landing/about.html")
 
 
 @mod_landing.route('/shoot', methods=['GET', 'POST'])
@@ -17,4 +22,4 @@ def shoot():
 
 @mod_landing.route('/about', methods=['GET', 'POST'])
 def about():
-    return render_template("landing/about.html")
+    return render_template("index.html")

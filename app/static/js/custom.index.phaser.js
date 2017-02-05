@@ -193,7 +193,7 @@ window.onload = function() {
     }
 
     function createWeaponTracker() {
-             //  Creates 30 bullets, using the 'bullet' graphic
+        //  Creates 30 bullets, using the 'bullet' graphic
         weapon = game.add.weapon(30, 'bullet');
         //  The bullet will be automatically killed when it leaves the world bounds
         weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;

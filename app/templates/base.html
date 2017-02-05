@@ -9,11 +9,13 @@
 
         <title>{% block title %}{% endblock %} - Spotlight Flight</title>
 
+        <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet" />
         <!--<script src="//cdn.jsdelivr.net/phaser/2.5.0/phaser.min.js"></script>-->
         <script src="{{ url_for('static', filename='js/phaser.min.js') }}"></script>
 
         <style type="text/css">
             body {
+                padding-top: 0px;
                 margin: 0;
             }
         </style>
