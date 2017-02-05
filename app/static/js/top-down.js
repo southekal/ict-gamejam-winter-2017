@@ -9,6 +9,7 @@ function preload() {
     game.load.image('singlebrick', 'static/img/intro/single_brick.png');
     game.load.image('ship', 'static/img/intro/ship.png');
     game.load.spritesheet('kaboom', 'static/img/intro/explode.png', 128, 128);
+    // game.load.spritesheet('kabam', 'static/img/intro/wall_brick.png', 128, 128);
     game.load.image('starfield', 'static/img/intro/background.png');
     game.load.spritesheet('dude', "static/img/intro/enrique_sprite.png", 72, 80);
     game.load.spritesheet('donald', "static/img/intro/donald_sprite_2.png", 80, 75);
@@ -27,7 +28,11 @@ var bulletTime = 0;
 var cursors;
 var fireButton;
 var explosions;
+var brickadds;
 var starfield;
+var wall_bricks;
+var mboundary;
+var usboundary;
 
 var scoreTaco = 0;
 var scoreTacoString = '';
@@ -42,6 +47,8 @@ var enemyBullet;
 var firingTimer = 0;
 var stateText;
 var livingEnemies = [];
+var createdBricksHolder = [];
+
 
 function create() {
 
@@ -82,6 +89,9 @@ function create() {
     // Create bricks section in the middle
     createBricks();
 
+    // Wall bricks created by Trump
+    createWallbricks();
+
     // Setup initial single taco showing up randomly
     setupTacos();
 
@@ -115,6 +125,11 @@ function create() {
     explosions.createMultiple(30, 'kaboom');
     explosions.forEach(setupInvader, this);
 
+    //  An explosion for brick add pool
+    brickadds = game.add.group();
+    brickadds.createMultiple(30, 'kaboom');
+    brickadds.forEach(setupBricker, this);
+
     // Make screen go full size
     //game.input.onDown.add(goFullscreen, this);
 
@@ -133,10 +148,16 @@ function create() {
 function update() {
 
     game.physics.arcade.collide(bricks, player);
+    game.physics.arcade.collide(wall_bricks, player);
     game.physics.arcade.collide(player, platforms);
+
     game.physics.arcade.collide(tacos, platforms);
+    
     game.physics.arcade.collide(donald, player);
     game.physics.arcade.collide(donald, platforms);
+    game.physics.arcade.collide(donald, bricks);
+    game.physics.arcade.collide(donald, wall_bricks);
+
 
     
     // *********************************************************************************************************
@@ -217,13 +238,12 @@ function update() {
 
     //  Run collision
     game.physics.arcade.overlap(bullets, bricks, collisionHandler, null, this);
+    game.physics.arcade.overlap(bullets, wall_bricks, collisionWallHandler, null, this);
     //  Checks to see if the player overlaps with any of the tacos, if he does call the collectTacos function
     game.physics.arcade.overlap(player, tacos, collectTacos, null, this);
     
-
     game.physics.arcade.overlap(brick_bullets, bricks, collisionBrickHandler, null, this);
-    // game.physics.arcade.overlap(enemyBullets, player, enemyHitsPlayer, null, this);
-
+    // game.physics.arcade.overlap(brick_bullets, platforms, collisionBoundaryHandler, null, this);
     //  Checks to see if donald overlaps with any of the bricks, if he does call the collectBricks function
     game.physics.arcade.overlap(donald, dbricks, collectBricks, null, this);
 
@@ -244,6 +264,7 @@ function createBricks () {
     bricks = game.add.group();
     bricks.enableBody = true;
     bricks.physicsBodyType = Phaser.Physics.ARCADE;
+    bricks.immovable = true;
     
     for (var y = 0; y < 4; y++)
     {
@@ -254,6 +275,8 @@ function createBricks () {
             brick.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
             brick.play('fly');
             brick.body.moves = false;
+            brick.xcoordinate = brick.body.x;
+            brick.ycoordinate = brick.body.y;
         }
     }
 
@@ -261,13 +284,30 @@ function createBricks () {
     bricks.y = 150;
 }
 
+function createWallbricks(){
+//  The baddies!
+    wall_bricks = game.add.group();
+    wall_bricks.enableBody = true;
+    wall_bricks.physicsBodyType = Phaser.Physics.ARCADE;
+    wall_bricks.immovable = true;
+
+}
+
 function setupInvader (invader) {
 
     invader.anchor.x = 0.5;
     invader.anchor.y = 0.5;
     invader.animations.add('kaboom');
-
 }
+
+function setupBricker (invader) {
+
+    invader.anchor.x = 0.5;
+    invader.anchor.y = 0.5;
+    invader.animations.add('kaboom');
+}
+
+
 
 function collisionHandler (bullet, brick) {
 
@@ -292,16 +332,87 @@ function collisionHandler (bullet, brick) {
 
 }
 
+function collisionWallHandler (bullet, wall_brick) {
+
+    //  When a bullet hits an alien we kill them both
+    bullet.kill();
+    wall_brick.kill();
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(wall_brick.body.x, wall_brick.body.y);
+    explosion.play('kaboom', 30, false, true);
+
+    // if (wall_bricks.countLiving() == 0)
+    // {
+
+    //     stateText.text = "Enrique! You Won, \n Click to restart";
+    //     stateText.visible = true;
+
+    //     //the "click to restart" handler
+    //     game.input.onTap.addOnce(restart,this);
+    // }
+
+}
+
+function collisionBoundaryHandler (brick_bullet, mboundary) {
+    brick_bullet.kill();
+
+    if (createdBricksHolder.length >= 0 && createdBricksHolder.length <= 20) {
+        y_axis = -100;    
+    } else if (createdBricksHolder.length > 20 && createdBricksHolder.length <= 40) {
+        y_axis = -120;
+    } else if (createdBricksHolder.length > 40 && createdBricksHolder.length <= 60) {
+        y_axis = -140;
+    } else {
+        y_axis = -140;
+    }    
+
+    console.log(mboundary.body.x);
+    console.log(mboundary.body.y);
+
+    var wall_brick = wall_bricks.create(mboundary.body.x, mboundary.body.y-30, 'brick');
+    wall_brick.anchor.setTo(0, -3);
+    wall_brick.x_coordinate = mboundary.body.x;
+    wall_brick.y_coordinate = mboundary.body.y-100;
+    wall_brick.body.collideWorldBounds = true;
+
+    wall_bricks.x = 0;
+    wall_bricks.y = y_axis;
+    createdBricksHolder.push("brick_added");
+
+    //  And create an explosion :)
+    var explosion = explosions.getFirstExists(false);
+    explosion.reset(mboundary.body.x, mboundary.body.y);
+    explosion.play('kaboom', 30, false, true);
+
+}
+
+
 function collisionBrickHandler (brick_bullet, brick) {
 
     brick_bullet.kill();
-    brick.kill();
 
-    // var brick = bricks.create(88, 25, 'brick');
-    // brick.anchor.setTo(1.1, -5);
-    // brick.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
-    // brick.play('fly');
-    // brick.body.moves = false;
+    if (createdBricksHolder.length >= 0 && createdBricksHolder.length <= 20) {
+        y_axis = -100;    
+    } else if (createdBricksHolder.length > 20 && createdBricksHolder.length <= 40) {
+        y_axis = -122;
+    } else if (createdBricksHolder.length > 40 && createdBricksHolder.length <= 60) {
+        y_axis = -140;
+    } else {
+        y_axis = -140;
+    }    
+
+    var wall_brick = wall_bricks.create(brick.body.x, brick.body.y, 'brick');
+    wall_brick.anchor.setTo(0, -3);
+    wall_brick.x_coordinate = brick.body.x;
+    wall_brick.y_coordinate = brick.body.y;
+    wall_brick.body.collideWorldBounds = true;
+    wall_brick.body.immovable = true;
+    
+    wall_bricks.x = 0;
+    wall_bricks.y = y_axis;
+    createdBricksHolder.push("brick_added");
 
     //  And create an explosion :)
     var explosion = explosions.getFirstExists(false);
@@ -317,7 +428,6 @@ function collisionBrickHandler (brick_bullet, brick) {
         //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
     }
-
 }
 
 
@@ -509,20 +619,22 @@ function setupSky() {
 
 function setupMexicoBorder() {
    // Here we create the ground.
-    var boundary = platforms.create(0, game.world.height - 200, 'mexicoBorder');
+    mboundary = platforms.create(0, game.world.height - 200, 'mexicoBorder');
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    boundary.scale.setTo(1, 1);
+    mboundary.scale.setTo(1, 1);
     //  This stops it from falling away when you jump on it
-    boundary.body.immovable = true;
+    mboundary.body.immovable = true;
+    mboundary.body.collideWorldBounds = true;
 }
 
 function setupUsBorder() {
    // Here we create the ground.
-    var boundary = platforms.create(0, game.world.height - 350, 'usBorder');
+    usboundary = platforms.create(0, game.world.height - 350, 'usBorder');
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    boundary.scale.setTo(1, 1);
+    usboundary.scale.setTo(1, 1);
     //  This stops it from falling away when you jump on it
-    boundary.body.immovable = true;
+    usboundary.body.immovable = true;
+    usboundary.body.collideWorldBounds = true;
 }
 
 function collectTacos (player, taco) {
