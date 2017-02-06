@@ -43,20 +43,32 @@ Access the url in your browser
 
 ### 2 Player Game
 
-Donald (To Win) - Keep building the wall and survive 45 seconds!
-Controls:
+#### Donald (To Win) - Keep building the wall and survive 45 seconds!
+
+#####Controls:
+
 W - Run Up
+
 A - Run Left
+
 S - Run Down
+
 D - Run Right
+
 Tab - Place Brick
 
-Enrique (To Win) - Collect Tacos and Destroy the wall!
-Controls:
+####Enrique (To Win) - Collect Tacos and Destroy the wall!
+
+#####Controls:
+
 Up - Run Up
+
 Left - Run Left
+
 Down - Run Down
+
 Right - Run Right
+
 Spacebar - Throw Taco
 
 [![N|Solid](https://locotaco.herokuapp.com/static/img/intro/playgame.png)](https://locotaco.herokuapp.com)
