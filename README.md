@@ -1,5 +1,5 @@
 # [ICT Winter Game Jam 2017](http://ictgamejam.com)
-[![N|Solid](https://locotaco.herokuapp.com/static/img/intro/playgame.png)](https://locotaco.herokuapp.com)
+#### Play in Browser - https://locotaco.herokuapp.com
 
 ## Installation
 
@@ -71,4 +71,9 @@ Right - Run Right
 
 Spacebar - Throw Taco
 
-[![N|Solid](https://locotaco.herokuapp.com/static/img/intro/playgame.png)](https://locotaco.herokuapp.com)
+####Credits
+- Character and Art Design: Benny Bowden
+- Gameplay and Interface Design: Jason Toevs
+- Development and Coding: Sandip Southekal
+
+
