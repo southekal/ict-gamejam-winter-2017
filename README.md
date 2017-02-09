@@ -47,29 +47,25 @@ Access the url in your browser
 
 #####Controls:
 
+```sh
 W - Run Up
-
 A - Run Left
-
 S - Run Down
-
 D - Run Right
-
 Tab - Place Brick
+```
 
 ####Enrique (To Win) - Collect Tacos and Destroy the wall!
 
 #####Controls:
 
+```sh
 Up - Run Up
-
 Left - Run Left
-
 Down - Run Down
-
 Right - Run Right
-
 Spacebar - Throw Taco
+```
 
 ####Credits
 - Character and Art Design: Benny Bowden
